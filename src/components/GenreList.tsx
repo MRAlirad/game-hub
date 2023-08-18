@@ -1,14 +1,13 @@
-import { HStack, List, ListItem, Image, Spinner, Button, Heading } from "@chakra-ui/react";
-import useGenres, { Genre } from "../hooks/useGenres";
+import { Button, HStack, Heading, Image, List, ListItem, Spinner } from "@chakra-ui/react";
+import useGenres from "../hooks/useGenres";
 import getCroppedImageUrl from "../services/image-url";
+import useGameQueryStore from "../store";
 
-interface Props {
-    onSelectGenre : (genre: Genre) => void;
-    selectedGenreId ?: number;
-}
 
-const GenreList = ({selectedGenreId,onSelectGenre}: Props) => {
+const GenreList = () => {
     const {data, isLoading, error} = useGenres();
+    const selectedGenreId    = useGameQueryStore(s => s.gameQuery.genreId)
+    const setSelectedGenreId = useGameQueryStore(s => s.setGenreId)
 
     if(error) return null;
 
@@ -21,8 +20,22 @@ const GenreList = ({selectedGenreId,onSelectGenre}: Props) => {
                 {data?.results.map(genre => (
                     <ListItem key={genre.id} marginY='5px'>
                         <HStack>
-                            <Image boxSize="32px" borderRadius={8} objectFit='cover' src={getCroppedImageUrl(genre.image_background)} />
-                            <Button whiteSpace='normal' textAlign="left" fontWeight={genre.id === selectedGenreId ? 'bold' : 'normal'} fontSize='lg' variant='link' onClick={()=> onSelectGenre(genre)}>{genre.name}</Button>
+                            <Image
+                                boxSize="32px"
+                                borderRadius={8}
+                                objectFit='cover'
+                                src={getCroppedImageUrl(genre.image_background)}
+                            />
+                            <Button
+                                whiteSpace='normal'
+                                textAlign="left"
+                                fontWeight={genre.id === selectedGenreId ? 'bold' : 'normal'}
+                                fontSize='lg'
+                                variant='link'
+                                onClick={()=> setSelectedGenreId(genre.id)}
+                            >
+                                {genre.name}
+                            </Button>
                         </HStack>
                     </ListItem>
                 ))}
