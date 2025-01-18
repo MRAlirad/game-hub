@@ -14,7 +14,11 @@ const GameCard = ({game} : Props)=>
 {
     return(
         <Card>
-            <Image src={getCroppedImageUrl(game.background_image)} />
+            <div style={{
+                aspectRatio: '3/2'
+            }}>
+                <Image src={getCroppedImageUrl(game.background_image)} />
+            </div>
             <CardBody>
                 <HStack justifyContent='space-between' marginBottom={3}>
                     <PlatformIconList platforms={game.parent_platforms.map(p => p.platform)} />
